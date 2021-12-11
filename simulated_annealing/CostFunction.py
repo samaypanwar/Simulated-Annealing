@@ -1,12 +1,5 @@
 
-def odd_point_max(vector) -> float:
-    # count = 0
-    # for idx, el in enumerate(vector):
+def square_sum(vector) -> float:
 
-    #     if idx % 2 == 0:
-    #         count -= 1
-
-    #     else: count += 1
-
-    return sum(vector)
+    return sum(vector[i]**2 for i in range(len(vector)))
 
