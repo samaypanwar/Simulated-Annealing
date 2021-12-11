@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from simulated_annealing import CostFunction, NeighbourhoodFunction, TemperatureFunction
+from simulated_annealing.utils import plot_function
 
 class SimulatedAnnealing:
 
@@ -28,7 +29,7 @@ class SimulatedAnnealing:
         self.initialTemp = inititalTemp
         self.finalTemp = finalTemp
         self.currentTemp = self.initialTemp
-        self.vector = np.random.random(size=5)
+        self.vector = np.random.random(size=2)
 
     def begin_process(self) -> tuple:
         """This function conducts the annealing itself where as the temperature decreases,
@@ -72,13 +73,15 @@ class SimulatedAnnealing:
 
 if __name__ == '__main__':
 
-    costFunction = CostFunction.odd_point_max
+    costFunction = CostFunction.square_sum
     temperatureFunction = TemperatureFunction.geometric
     neighbourhoodFunction = NeighbourhoodFunction.shift_all_randomly_normal
 
     SA = SimulatedAnnealing(costFunction, neighbourhoodFunction, temperatureFunction)
     result = SA.begin_process()
-    print(result)
+    plot_function(costFunction, optima=tuple(result[0]))
+
+
 
 
 
