@@ -87,12 +87,16 @@ class SimulatedAnnealing(BaseOptimizer):
         f_x = float(obj(x))
         n_evals = 1
 
+        best_x = x.copy()
+        best_f = f_x
+
         T = self.initial_temp
         step = 0
 
         path: list[np.ndarray] = [x.copy()]
         temperatures: list[float] = [T]
         acceptance_probs: list[float] = [1.0]
+        value_history: list[float] = [f_x]
 
         while T > self.final_temp:
             step += 1
@@ -111,19 +115,25 @@ class SimulatedAnnealing(BaseOptimizer):
                 x = x_new
                 f_x = f_new
 
+                if f_new < best_f:
+                    best_f = f_new
+                    best_x = x_new.copy()
+
                 if step % self.record_every_n == 0:
                     path.append(x.copy())
                     temperatures.append(T)
                     acceptance_probs.append(prob)
+                    value_history.append(f_x)
 
             T = self.schedule(T, step)
 
         return OptimizationResult(
-            solution=x.copy(),
-            value=f_x,
+            solution=best_x,
+            value=best_f,
             path=path,
             temperatures=temperatures,
             acceptance_probs=acceptance_probs,
+            value_history=value_history,
             n_evaluations=n_evals,
             converged=True,
         )

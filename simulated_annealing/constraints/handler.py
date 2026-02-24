@@ -49,14 +49,14 @@ def penalty_augment(
     if not constraints:
         return objective
 
-    def augmented(x: np.ndarray) -> float:
-        value = float(objective(x))
+    def augmented(x: np.ndarray):
+        value = objective(x)
         for c in constraints:
-            v = float(c.fn(x))
+            v = c.fn(x)
             if c.kind == "inequality":
-                value += c.penalty * max(0.0, v) ** 2
+                value = value + c.penalty * np.maximum(0.0, v) ** 2
             else:  # equality
-                value += c.penalty * v**2
+                value = value + c.penalty * v**2
         return value
 
     return augmented

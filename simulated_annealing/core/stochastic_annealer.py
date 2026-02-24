@@ -124,6 +124,7 @@ class StochasticSA(BaseOptimizer):
         path: list[np.ndarray] = [x.copy()]
         temperatures: list[float] = [T]
         acceptance_probs: list[float] = [1.0]
+        value_history: list[float] = [f_x]
 
         while True:
             step += 1
@@ -153,6 +154,7 @@ class StochasticSA(BaseOptimizer):
                     path.append(x.copy())
                     temperatures.append(T)
                     acceptance_probs.append(prob)
+                    value_history.append(f_x)
 
             T = self.schedule(T, step)
 
@@ -172,6 +174,7 @@ class StochasticSA(BaseOptimizer):
             path=path,
             temperatures=temperatures,
             acceptance_probs=acceptance_probs,
+            value_history=value_history,
             n_evaluations=n_evals,
             converged=True,
             n_reheats=n_reheats,

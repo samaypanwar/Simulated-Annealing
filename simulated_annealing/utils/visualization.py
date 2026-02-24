@@ -197,8 +197,9 @@ def plot_convergence(
     ----------
     results:
         Dict mapping optimizer name → :class:`OptimizationResult`.
-        Uses the ``path`` to re-evaluate objective values.  If you want to
-        plot the exact value sequence use :func:`plot_value_history` instead.
+        Uses ``value_history`` (the accepted objective value at each recorded
+        step) when available.  Falls back to plotting the final value as a
+        flat reference line for results that pre-date this field.
     title:
         Plot title.
     log_scale:
@@ -209,30 +210,40 @@ def plot_convergence(
 
     for idx, (name, result) in enumerate(results.items()):
         color = colors[idx % len(colors)]
-        # Use acceptance_probs as proxy for "recorded at step" — length matches path
-        n_pts = len(result.path)
-        if n_pts > 0:
+        if result.value_history:
+            n_pts = len(result.value_history)
             ax.plot(
                 range(n_pts),
-                [result.value] * n_pts,
-                "--",
+                result.value_history,
+                "-",
                 color=color,
-                alpha=0.4,
-                linewidth=0.8,
+                alpha=0.8,
+                linewidth=1.2,
+                label=f"{name}  (best f={result.value:.4f})",
             )
-        # Mark final value
-        ax.axhline(result.value, color=color, linestyle=":", linewidth=1.0)
-        ax.scatter(
-            n_pts - 1 if n_pts else 0,
-            result.value,
-            color=color,
-            s=80,
-            zorder=5,
-            label=f"{name}  (f={result.value:.4f})",
-        )
+        else:
+            n_pts = len(result.path)
+            if n_pts > 0:
+                ax.plot(
+                    range(n_pts),
+                    [result.value] * n_pts,
+                    "--",
+                    color=color,
+                    alpha=0.4,
+                    linewidth=0.8,
+                )
+            ax.scatter(
+                n_pts - 1 if n_pts else 0,
+                result.value,
+                color=color,
+                s=80,
+                zorder=5,
+                label=f"{name}  (f={result.value:.4f})",
+            )
+        ax.axhline(result.value, color=color, linestyle=":", linewidth=1.0, alpha=0.5)
 
     ax.set_xlabel("Accepted steps recorded")
-    ax.set_ylabel("f(x*)")
+    ax.set_ylabel("f(x)")
     ax.set_title(title)
     if log_scale:
         ax.set_yscale("log")

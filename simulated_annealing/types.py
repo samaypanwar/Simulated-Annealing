@@ -39,6 +39,9 @@ class OptimizationResult:
         Acceptance probability recorded at each step (SA-based optimizers).
         1.0 indicates the move was an improvement; values in (0, 1) indicate
         a probabilistic uphill acceptance.
+    value_history:
+        Objective value at each recorded accepted step (SA-based optimizers).
+        Same length as ``path``; useful for plotting real convergence curves.
     n_evaluations:
         Total number of objective function calls made during the run.
     converged:
@@ -51,6 +54,7 @@ class OptimizationResult:
     path: list[np.ndarray] = field(default_factory=list)
     temperatures: list[float] = field(default_factory=list)
     acceptance_probs: list[float] = field(default_factory=list)
+    value_history: list[float] = field(default_factory=list)
     n_evaluations: int = 0
     converged: bool = False
 
