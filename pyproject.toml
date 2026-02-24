@@ -1,0 +1,32 @@
+[project]
+name = "simulated-annealing"
+version = "0.1.0"
+description = "Educational package for Simulated Annealing with comparisons and visualizations"
+authors = [
+    {name = "Samay Panwar", email = "samaybhuvi@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "matplotlib>=3.8",
+    "scipy>=1.12",
+    "jupyter>=1.0",
+    "ipykernel>=6.29",
+    "ipywidgets>=8.1",
+    "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
